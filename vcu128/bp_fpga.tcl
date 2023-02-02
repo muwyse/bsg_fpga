@@ -92,37 +92,9 @@ set proj_dir [get_property directory [current_project]]
 # Set project properties
 set obj [current_project]
 set_property -name "default_lib" -value "xil_defaultlib" -objects $obj
-set_property -name "dsa.accelerator_binary_content" -value "bitstream" -objects $obj
-set_property -name "dsa.accelerator_binary_format" -value "xclbin2" -objects $obj
-set_property -name "dsa.description" -value "Vivado generated DSA" -objects $obj
-set_property -name "dsa.dr_bd_base_address" -value "0" -objects $obj
-set_property -name "dsa.emu_dir" -value "emu" -objects $obj
-set_property -name "dsa.flash_interface_type" -value "bpix16" -objects $obj
-set_property -name "dsa.flash_offset_address" -value "0" -objects $obj
-set_property -name "dsa.flash_size" -value "1024" -objects $obj
-set_property -name "dsa.host_architecture" -value "x86_64" -objects $obj
-set_property -name "dsa.host_interface" -value "pcie" -objects $obj
-set_property -name "dsa.num_compute_units" -value "60" -objects $obj
-set_property -name "dsa.platform_state" -value "pre_synth" -objects $obj
-set_property -name "dsa.vendor" -value "xilinx" -objects $obj
-set_property -name "dsa.version" -value "0.0" -objects $obj
-set_property -name "enable_vhdl_2008" -value "1" -objects $obj
 set_property -name "ip_cache_permissions" -value "read write" -objects $obj
 set_property -name "ip_output_repo" -value "$proj_dir/${_xil_proj_name_}.cache/ip" -objects $obj
-set_property -name "mem.enable_memory_map_generation" -value "1" -objects $obj
 set_property -name "part" -value "xcvu37p-fsvh2892-2L-e-es1" -objects $obj
-set_property -name "sim.central_dir" -value "$proj_dir/${_xil_proj_name_}.ip_user_files" -objects $obj
-set_property -name "sim.ip.auto_export_scripts" -value "1" -objects $obj
-set_property -name "simulator_language" -value "Mixed" -objects $obj
-set_property -name "source_mgmt_mode" -value "None" -objects $obj
-set_property -name "webtalk.activehdl_export_sim" -value "1" -objects $obj
-set_property -name "webtalk.ies_export_sim" -value "1" -objects $obj
-set_property -name "webtalk.modelsim_export_sim" -value "1" -objects $obj
-set_property -name "webtalk.questa_export_sim" -value "1" -objects $obj
-set_property -name "webtalk.riviera_export_sim" -value "1" -objects $obj
-set_property -name "webtalk.vcs_export_sim" -value "1" -objects $obj
-set_property -name "webtalk.xsim_export_sim" -value "1" -objects $obj
-set_property -name "xpm_libraries" -value "XPM_CDC XPM_FIFO XPM_MEMORY" -objects $obj
 
 # Create 'sources_1' fileset (if not found)
 if {[string equal [get_filesets -quiet sources_1] ""]} {
@@ -328,6 +300,7 @@ proc cr_bd_design_1 { parentCell } {
   xilinx.com:ip:hbm:1.0\
   xilinx.com:ip:ila:6.2\
   xilinx.com:ip:proc_sys_reset:5.0\
+  xilinx.com:ip:smartconnect:1.0\
   xilinx.com:ip:util_ds_buf:2.1\
   xilinx.com:ip:xdma:4.1\
   "
@@ -399,6 +372,8 @@ proc cr_bd_design_1 { parentCell } {
 
   set s_apb [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:apb_rtl:1.0 s_apb ]
 
+  set s_apb_1 [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:apb_rtl:1.0 s_apb_1 ]
+
   set s_axi [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 s_axi ]
   set_property -dict [ list \
    CONFIG.ADDR_WIDTH {33} \
@@ -434,6 +409,7 @@ proc cr_bd_design_1 { parentCell } {
 
   # Create ports
   set apb_complete [ create_bd_port -dir O -type data apb_complete ]
+  set apb_complete_1 [ create_bd_port -dir O apb_complete_1 ]
   set mig_clk [ create_bd_port -dir O -type clk mig_clk ]
   set_property -dict [ list \
    CONFIG.ASSOCIATED_BUSIF {s_axi:m_axi_lite} \
@@ -522,9 +498,9 @@ proc cr_bd_design_1 { parentCell } {
    CONFIG.USER_APB_PCLK_0 {100} \
    CONFIG.USER_AXI_CLK_FREQ {250} \
    CONFIG.USER_CLK_SEL_LIST0 {AXI_00_ACLK} \
-   CONFIG.USER_CLK_SEL_LIST1 {AXI_23_ACLK} \
-   CONFIG.USER_HBM_DENSITY {4GB} \
-   CONFIG.USER_HBM_STACK {1} \
+   CONFIG.USER_CLK_SEL_LIST1 {AXI_16_ACLK} \
+   CONFIG.USER_HBM_DENSITY {8GB} \
+   CONFIG.USER_HBM_STACK {2} \
    CONFIG.USER_MC0_ECC_BYPASS {true} \
    CONFIG.USER_MC0_MAINTAIN_COHERENCY {false} \
    CONFIG.USER_MC0_REORDER_EN {false} \
@@ -592,28 +568,28 @@ proc cr_bd_design_1 { parentCell } {
    CONFIG.USER_MC_ENABLE_01 {TRUE} \
    CONFIG.USER_MC_ENABLE_02 {TRUE} \
    CONFIG.USER_MC_ENABLE_03 {TRUE} \
-   CONFIG.USER_MC_ENABLE_04 {FALSE} \
-   CONFIG.USER_MC_ENABLE_05 {FALSE} \
-   CONFIG.USER_MC_ENABLE_06 {FALSE} \
-   CONFIG.USER_MC_ENABLE_07 {FALSE} \
-   CONFIG.USER_MC_ENABLE_08 {FALSE} \
-   CONFIG.USER_MC_ENABLE_09 {FALSE} \
-   CONFIG.USER_MC_ENABLE_10 {FALSE} \
-   CONFIG.USER_MC_ENABLE_11 {FALSE} \
-   CONFIG.USER_MC_ENABLE_12 {FALSE} \
-   CONFIG.USER_MC_ENABLE_13 {FALSE} \
-   CONFIG.USER_MC_ENABLE_14 {FALSE} \
-   CONFIG.USER_MC_ENABLE_15 {FALSE} \
-   CONFIG.USER_MC_ENABLE_APB_01 {FALSE} \
-   CONFIG.USER_MEMORY_DISPLAY {2048} \
-   CONFIG.USER_PHY_ENABLE_08 {FALSE} \
-   CONFIG.USER_PHY_ENABLE_09 {FALSE} \
-   CONFIG.USER_PHY_ENABLE_10 {FALSE} \
-   CONFIG.USER_PHY_ENABLE_11 {FALSE} \
-   CONFIG.USER_PHY_ENABLE_12 {FALSE} \
-   CONFIG.USER_PHY_ENABLE_13 {FALSE} \
-   CONFIG.USER_PHY_ENABLE_14 {FALSE} \
-   CONFIG.USER_PHY_ENABLE_15 {FALSE} \
+   CONFIG.USER_MC_ENABLE_04 {TRUE} \
+   CONFIG.USER_MC_ENABLE_05 {TRUE} \
+   CONFIG.USER_MC_ENABLE_06 {TRUE} \
+   CONFIG.USER_MC_ENABLE_07 {TRUE} \
+   CONFIG.USER_MC_ENABLE_08 {TRUE} \
+   CONFIG.USER_MC_ENABLE_09 {TRUE} \
+   CONFIG.USER_MC_ENABLE_10 {TRUE} \
+   CONFIG.USER_MC_ENABLE_11 {TRUE} \
+   CONFIG.USER_MC_ENABLE_12 {TRUE} \
+   CONFIG.USER_MC_ENABLE_13 {TRUE} \
+   CONFIG.USER_MC_ENABLE_14 {TRUE} \
+   CONFIG.USER_MC_ENABLE_15 {TRUE} \
+   CONFIG.USER_MC_ENABLE_APB_01 {TRUE} \
+   CONFIG.USER_MEMORY_DISPLAY {8192} \
+   CONFIG.USER_PHY_ENABLE_08 {TRUE} \
+   CONFIG.USER_PHY_ENABLE_09 {TRUE} \
+   CONFIG.USER_PHY_ENABLE_10 {TRUE} \
+   CONFIG.USER_PHY_ENABLE_11 {TRUE} \
+   CONFIG.USER_PHY_ENABLE_12 {TRUE} \
+   CONFIG.USER_PHY_ENABLE_13 {TRUE} \
+   CONFIG.USER_PHY_ENABLE_14 {TRUE} \
+   CONFIG.USER_PHY_ENABLE_15 {TRUE} \
    CONFIG.USER_SAXI_00 {true} \
    CONFIG.USER_SAXI_01 {false} \
    CONFIG.USER_SAXI_02 {false} \
@@ -630,9 +606,25 @@ proc cr_bd_design_1 { parentCell } {
    CONFIG.USER_SAXI_13 {false} \
    CONFIG.USER_SAXI_14 {false} \
    CONFIG.USER_SAXI_15 {false} \
+   CONFIG.USER_SAXI_16 {true} \
+   CONFIG.USER_SAXI_17 {false} \
+   CONFIG.USER_SAXI_18 {false} \
+   CONFIG.USER_SAXI_19 {false} \
+   CONFIG.USER_SAXI_20 {false} \
+   CONFIG.USER_SAXI_21 {false} \
+   CONFIG.USER_SAXI_22 {false} \
+   CONFIG.USER_SAXI_23 {false} \
+   CONFIG.USER_SAXI_24 {false} \
+   CONFIG.USER_SAXI_25 {false} \
+   CONFIG.USER_SAXI_26 {false} \
+   CONFIG.USER_SAXI_27 {false} \
+   CONFIG.USER_SAXI_28 {false} \
+   CONFIG.USER_SAXI_29 {false} \
+   CONFIG.USER_SAXI_30 {false} \
+   CONFIG.USER_SAXI_31 {false} \
    CONFIG.USER_SINGLE_STACK_SELECTION {LEFT} \
    CONFIG.USER_SWITCH_ENABLE_00 {TRUE} \
-   CONFIG.USER_SWITCH_ENABLE_01 {FALSE} \
+   CONFIG.USER_SWITCH_ENABLE_01 {TRUE} \
    CONFIG.USER_TEMP_POLL_CNT_0 {100000} \
  ] $hbm_0
 
@@ -698,6 +690,13 @@ proc cr_bd_design_1 { parentCell } {
   # Create instance: proc_sys_reset_3, and set properties
   set proc_sys_reset_3 [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_3 ]
 
+  # Create instance: smartconnect_0, and set properties
+  set smartconnect_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:smartconnect:1.0 smartconnect_0 ]
+  set_property -dict [ list \
+   CONFIG.NUM_MI {2} \
+   CONFIG.NUM_SI {1} \
+ ] $smartconnect_0
+
   # Create instance: util_ds_buf_0, and set properties
   set util_ds_buf_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:util_ds_buf:2.1 util_ds_buf_0 ]
   set_property -dict [ list \
@@ -728,27 +727,31 @@ proc cr_bd_design_1 { parentCell } {
  ] $xdma_0
 
   # Create interface connections
+  connect_bd_intf_net -intf_net SAPB_1_0_1 [get_bd_intf_ports s_apb_1] [get_bd_intf_pins hbm_0/SAPB_1]
   connect_bd_intf_net -intf_net axi_clock_converter_0_M_AXI [get_bd_intf_ports m_axi_lite] [get_bd_intf_pins axi_clock_converter_0/M_AXI]
-  connect_bd_intf_net -intf_net axi_clock_converter_1_M_AXI [get_bd_intf_pins axi_clock_converter_1/M_AXI] [get_bd_intf_pins hbm_0/SAXI_00]
+  connect_bd_intf_net -intf_net axi_clock_converter_1_M_AXI [get_bd_intf_pins axi_clock_converter_1/M_AXI] [get_bd_intf_pins smartconnect_0/S00_AXI]
   connect_bd_intf_net -intf_net axi_protocol_convert_0_M_AXI [get_bd_intf_pins axi_clock_converter_1/S_AXI] [get_bd_intf_pins axi_protocol_convert_0/M_AXI]
   connect_bd_intf_net -intf_net pcie_refclk_1 [get_bd_intf_ports pcie_refclk] [get_bd_intf_pins util_ds_buf_0/CLK_IN_D]
   connect_bd_intf_net -intf_net s_apb_1 [get_bd_intf_ports s_apb] [get_bd_intf_pins hbm_0/SAPB_0]
   connect_bd_intf_net -intf_net s_axi_1 [get_bd_intf_ports s_axi] [get_bd_intf_pins axi_protocol_convert_0/S_AXI]
-connect_bd_intf_net -intf_net [get_bd_intf_nets s_axi_1] [get_bd_intf_ports s_axi] [get_bd_intf_pins ila_0/SLOT_0_AXI]
+  connect_bd_intf_net -intf_net [get_bd_intf_nets s_axi_1] [get_bd_intf_ports s_axi] [get_bd_intf_pins ila_0/SLOT_0_AXI]
+  connect_bd_intf_net -intf_net smartconnect_0_M00_AXI [get_bd_intf_pins hbm_0/SAXI_00] [get_bd_intf_pins smartconnect_0/M00_AXI]
+  connect_bd_intf_net -intf_net smartconnect_0_M01_AXI [get_bd_intf_pins hbm_0/SAXI_16] [get_bd_intf_pins smartconnect_0/M01_AXI]
   connect_bd_intf_net -intf_net xdma_0_M_AXI_LITE [get_bd_intf_pins axi_clock_converter_0/S_AXI] [get_bd_intf_pins xdma_0/M_AXI_LITE]
   connect_bd_intf_net -intf_net xdma_0_pcie_mgt [get_bd_intf_ports pci_express_x4] [get_bd_intf_pins xdma_0/pcie_mgt]
 
   # Create port connections
   connect_bd_net -net clk_wiz_0_clk_out1 [get_bd_ports mig_clk] [get_bd_pins axi_clock_converter_0/m_axi_aclk] [get_bd_pins axi_clock_converter_1/s_axi_aclk] [get_bd_pins axi_protocol_convert_0/aclk] [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins ila_0/clk] [get_bd_pins proc_sys_reset_1/slowest_sync_clk]
-  connect_bd_net -net clk_wiz_0_clk_out2 [get_bd_pins clk_wiz_0/clk_out2] [get_bd_pins hbm_0/HBM_REF_CLK_0]
-  connect_bd_net -net clk_wiz_0_clk_out3 [get_bd_pins clk_wiz_0/clk_out3] [get_bd_pins hbm_0/APB_0_PCLK] [get_bd_pins proc_sys_reset_2/slowest_sync_clk]
-  connect_bd_net -net clk_wiz_0_clk_out4 [get_bd_pins axi_clock_converter_1/m_axi_aclk] [get_bd_pins clk_wiz_0/clk_out4] [get_bd_pins hbm_0/AXI_00_ACLK] [get_bd_pins proc_sys_reset_3/slowest_sync_clk]
+  connect_bd_net -net clk_wiz_0_clk_out2 [get_bd_pins clk_wiz_0/clk_out2] [get_bd_pins hbm_0/HBM_REF_CLK_0] [get_bd_pins hbm_0/HBM_REF_CLK_1]
+  connect_bd_net -net clk_wiz_0_clk_out3 [get_bd_pins clk_wiz_0/clk_out3] [get_bd_pins hbm_0/APB_0_PCLK] [get_bd_pins hbm_0/APB_1_PCLK] [get_bd_pins proc_sys_reset_2/slowest_sync_clk]
+  connect_bd_net -net clk_wiz_0_clk_out4 [get_bd_pins axi_clock_converter_1/m_axi_aclk] [get_bd_pins clk_wiz_0/clk_out4] [get_bd_pins hbm_0/AXI_00_ACLK] [get_bd_pins hbm_0/AXI_16_ACLK] [get_bd_pins proc_sys_reset_3/slowest_sync_clk] [get_bd_pins smartconnect_0/aclk]
   connect_bd_net -net hbm_0_apb_complete_0 [get_bd_ports apb_complete] [get_bd_pins hbm_0/apb_complete_0]
+  connect_bd_net -net hbm_0_apb_complete_1 [get_bd_ports apb_complete_1] [get_bd_pins hbm_0/apb_complete_1]
   connect_bd_net -net pcie_perstn_1 [get_bd_ports pcie_perstn] [get_bd_pins xdma_0/sys_rst_n]
   connect_bd_net -net proc_sys_reset_0_peripheral_aresetn [get_bd_ports pcie_rstn] [get_bd_pins proc_sys_reset_0/peripheral_aresetn]
   connect_bd_net -net proc_sys_reset_1_peripheral_aresetn [get_bd_ports mig_rstn] [get_bd_pins axi_clock_converter_0/m_axi_aresetn] [get_bd_pins axi_clock_converter_1/s_axi_aresetn] [get_bd_pins axi_protocol_convert_0/aresetn] [get_bd_pins proc_sys_reset_1/peripheral_aresetn]
-  connect_bd_net -net proc_sys_reset_2_peripheral_aresetn [get_bd_pins hbm_0/APB_0_PRESET_N] [get_bd_pins proc_sys_reset_2/peripheral_aresetn]
-  connect_bd_net -net proc_sys_reset_3_peripheral_aresetn [get_bd_pins axi_clock_converter_1/m_axi_aresetn] [get_bd_pins hbm_0/AXI_00_ARESET_N] [get_bd_pins proc_sys_reset_3/peripheral_aresetn]
+  connect_bd_net -net proc_sys_reset_2_peripheral_aresetn [get_bd_pins hbm_0/APB_0_PRESET_N] [get_bd_pins hbm_0/APB_1_PRESET_N] [get_bd_pins proc_sys_reset_2/peripheral_aresetn]
+  connect_bd_net -net proc_sys_reset_3_peripheral_aresetn [get_bd_pins axi_clock_converter_1/m_axi_aresetn] [get_bd_pins hbm_0/AXI_00_ARESET_N] [get_bd_pins hbm_0/AXI_16_ARESET_N] [get_bd_pins proc_sys_reset_3/peripheral_aresetn] [get_bd_pins smartconnect_0/aresetn]
   connect_bd_net -net reset_1 [get_bd_ports reset] [get_bd_pins proc_sys_reset_0/ext_reset_in] [get_bd_pins proc_sys_reset_1/ext_reset_in] [get_bd_pins proc_sys_reset_2/ext_reset_in] [get_bd_pins proc_sys_reset_3/ext_reset_in]
   connect_bd_net -net util_ds_buf_0_IBUF_DS_ODIV2 [get_bd_pins util_ds_buf_0/IBUF_DS_ODIV2] [get_bd_pins xdma_0/sys_clk]
   connect_bd_net -net util_ds_buf_0_IBUF_OUT [get_bd_pins util_ds_buf_0/IBUF_OUT] [get_bd_pins xdma_0/sys_clk_gt]
@@ -758,15 +761,72 @@ connect_bd_intf_net -intf_net [get_bd_intf_nets s_axi_1] [get_bd_intf_ports s_ax
 
   # Create address segments
   create_bd_addr_seg -range 0x00010000 -offset 0x44A00000 [get_bd_addr_spaces xdma_0/M_AXI_LITE] [get_bd_addr_segs m_axi_lite/Reg] SEG_m_axi_lite_Reg
-  create_bd_addr_seg -range 0x10000000 -offset 0x00000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM00] SEG_hbm_0_HBM_MEM00
-  create_bd_addr_seg -range 0x10000000 -offset 0x10000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM01] SEG_hbm_0_HBM_MEM01
-  create_bd_addr_seg -range 0x10000000 -offset 0x20000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM02] SEG_hbm_0_HBM_MEM02
-  create_bd_addr_seg -range 0x10000000 -offset 0x30000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM03] SEG_hbm_0_HBM_MEM03
-  create_bd_addr_seg -range 0x10000000 -offset 0x40000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM04] SEG_hbm_0_HBM_MEM04
-  create_bd_addr_seg -range 0x10000000 -offset 0x50000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM05] SEG_hbm_0_HBM_MEM05
-  create_bd_addr_seg -range 0x10000000 -offset 0x60000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM06] SEG_hbm_0_HBM_MEM06
-  create_bd_addr_seg -range 0x10000000 -offset 0x70000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM07] SEG_hbm_0_HBM_MEM07
+  create_bd_addr_seg -range 0x08000000 -offset 0x00000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM00] SEG_hbm_0_HBM_MEM00
+  create_bd_addr_seg -range 0x08000000 -offset 0x10000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM01] SEG_hbm_0_HBM_MEM01
+  create_bd_addr_seg -range 0x08000000 -offset 0x08000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM00] SEG_hbm_0_HBM_MEM002
+  create_bd_addr_seg -range 0x08000000 -offset 0x20000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM02] SEG_hbm_0_HBM_MEM02
+  create_bd_addr_seg -range 0x08000000 -offset 0x30000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM03] SEG_hbm_0_HBM_MEM03
+  create_bd_addr_seg -range 0x08000000 -offset 0x40000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM04] SEG_hbm_0_HBM_MEM04
+  create_bd_addr_seg -range 0x08000000 -offset 0x50000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM05] SEG_hbm_0_HBM_MEM05
+  create_bd_addr_seg -range 0x08000000 -offset 0x60000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM06] SEG_hbm_0_HBM_MEM06
+  create_bd_addr_seg -range 0x08000000 -offset 0x70000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM07] SEG_hbm_0_HBM_MEM07
+  create_bd_addr_seg -range 0x08000000 -offset 0x80000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM08] SEG_hbm_0_HBM_MEM08
+  create_bd_addr_seg -range 0x08000000 -offset 0x90000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM09] SEG_hbm_0_HBM_MEM09
+  create_bd_addr_seg -range 0x08000000 -offset 0xA0000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM10] SEG_hbm_0_HBM_MEM10
+  create_bd_addr_seg -range 0x08000000 -offset 0xB0000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM11] SEG_hbm_0_HBM_MEM11
+  create_bd_addr_seg -range 0x08000000 -offset 0xC0000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM12] SEG_hbm_0_HBM_MEM12
+  create_bd_addr_seg -range 0x08000000 -offset 0xD0000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM13] SEG_hbm_0_HBM_MEM13
+  create_bd_addr_seg -range 0x08000000 -offset 0xE0000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM14] SEG_hbm_0_HBM_MEM14
+  create_bd_addr_seg -range 0x08000000 -offset 0xF0000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM15] SEG_hbm_0_HBM_MEM15
+  create_bd_addr_seg -range 0x08000000 -offset 0x18000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM01] SEG_hbm_0_HBM_MEM015
+  create_bd_addr_seg -range 0x08000000 -offset 0x000100000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM16] SEG_hbm_0_HBM_MEM16
+  create_bd_addr_seg -range 0x08000000 -offset 0x000110000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM17] SEG_hbm_0_HBM_MEM17
+  create_bd_addr_seg -range 0x08000000 -offset 0x000120000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM18] SEG_hbm_0_HBM_MEM18
+  create_bd_addr_seg -range 0x08000000 -offset 0x000130000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM19] SEG_hbm_0_HBM_MEM19
+  create_bd_addr_seg -range 0x08000000 -offset 0x000140000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM20] SEG_hbm_0_HBM_MEM20
+  create_bd_addr_seg -range 0x08000000 -offset 0x000150000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM21] SEG_hbm_0_HBM_MEM21
+  create_bd_addr_seg -range 0x08000000 -offset 0x000160000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM22] SEG_hbm_0_HBM_MEM22
+  create_bd_addr_seg -range 0x08000000 -offset 0x000170000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM23] SEG_hbm_0_HBM_MEM23
+  create_bd_addr_seg -range 0x08000000 -offset 0x000180000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM24] SEG_hbm_0_HBM_MEM24
+  create_bd_addr_seg -range 0x08000000 -offset 0x000190000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM25] SEG_hbm_0_HBM_MEM25
+  create_bd_addr_seg -range 0x08000000 -offset 0x0001A0000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM26] SEG_hbm_0_HBM_MEM26
+  create_bd_addr_seg -range 0x08000000 -offset 0x0001B0000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM27] SEG_hbm_0_HBM_MEM27
+  create_bd_addr_seg -range 0x08000000 -offset 0x28000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM02] SEG_hbm_0_HBM_MEM028
+  create_bd_addr_seg -range 0x08000000 -offset 0x0001C0000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM28] SEG_hbm_0_HBM_MEM28
+  create_bd_addr_seg -range 0x08000000 -offset 0x0001D0000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM29] SEG_hbm_0_HBM_MEM29
+  create_bd_addr_seg -range 0x08000000 -offset 0x0001E0000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM30] SEG_hbm_0_HBM_MEM30
+  create_bd_addr_seg -range 0x08000000 -offset 0x0001F0000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM31] SEG_hbm_0_HBM_MEM31
+  create_bd_addr_seg -range 0x08000000 -offset 0x38000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM03] SEG_hbm_0_HBM_MEM0311
+  create_bd_addr_seg -range 0x08000000 -offset 0x48000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM04] SEG_hbm_0_HBM_MEM0414
+  create_bd_addr_seg -range 0x08000000 -offset 0x58000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM05] SEG_hbm_0_HBM_MEM0517
+  create_bd_addr_seg -range 0x08000000 -offset 0x68000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM06] SEG_hbm_0_HBM_MEM0620
+  create_bd_addr_seg -range 0x08000000 -offset 0x78000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM07] SEG_hbm_0_HBM_MEM0723
+  create_bd_addr_seg -range 0x08000000 -offset 0x88000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM08] SEG_hbm_0_HBM_MEM0826
+  create_bd_addr_seg -range 0x08000000 -offset 0x98000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM09] SEG_hbm_0_HBM_MEM0929
+  create_bd_addr_seg -range 0x08000000 -offset 0xA8000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM10] SEG_hbm_0_HBM_MEM1032
+  create_bd_addr_seg -range 0x08000000 -offset 0xB8000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM11] SEG_hbm_0_HBM_MEM1135
+  create_bd_addr_seg -range 0x08000000 -offset 0xC8000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM12] SEG_hbm_0_HBM_MEM1238
+  create_bd_addr_seg -range 0x08000000 -offset 0xD8000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM13] SEG_hbm_0_HBM_MEM1341
+  create_bd_addr_seg -range 0x08000000 -offset 0xE8000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM14] SEG_hbm_0_HBM_MEM1444
+  create_bd_addr_seg -range 0x08000000 -offset 0xF8000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM15] SEG_hbm_0_HBM_MEM1547
+  create_bd_addr_seg -range 0x08000000 -offset 0x000108000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM16] SEG_hbm_0_HBM_MEM1650
+  create_bd_addr_seg -range 0x08000000 -offset 0x000118000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM17] SEG_hbm_0_HBM_MEM1753
+  create_bd_addr_seg -range 0x08000000 -offset 0x000128000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM18] SEG_hbm_0_HBM_MEM1856
+  create_bd_addr_seg -range 0x08000000 -offset 0x000138000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM19] SEG_hbm_0_HBM_MEM1959
+  create_bd_addr_seg -range 0x08000000 -offset 0x000148000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM20] SEG_hbm_0_HBM_MEM2062
+  create_bd_addr_seg -range 0x08000000 -offset 0x000158000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM21] SEG_hbm_0_HBM_MEM2165
+  create_bd_addr_seg -range 0x08000000 -offset 0x000168000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM22] SEG_hbm_0_HBM_MEM2268
+  create_bd_addr_seg -range 0x08000000 -offset 0x000178000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM23] SEG_hbm_0_HBM_MEM2371
+  create_bd_addr_seg -range 0x08000000 -offset 0x000188000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM24] SEG_hbm_0_HBM_MEM2474
+  create_bd_addr_seg -range 0x08000000 -offset 0x000198000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM25] SEG_hbm_0_HBM_MEM2577
+  create_bd_addr_seg -range 0x08000000 -offset 0x0001A8000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM26] SEG_hbm_0_HBM_MEM2680
+  create_bd_addr_seg -range 0x08000000 -offset 0x0001B8000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM27] SEG_hbm_0_HBM_MEM2783
+  create_bd_addr_seg -range 0x08000000 -offset 0x0001C8000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM28] SEG_hbm_0_HBM_MEM2886
+  create_bd_addr_seg -range 0x08000000 -offset 0x0001D8000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM29] SEG_hbm_0_HBM_MEM2989
+  create_bd_addr_seg -range 0x08000000 -offset 0x0001E8000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM30] SEG_hbm_0_HBM_MEM3092
+  create_bd_addr_seg -range 0x08000000 -offset 0x0001F8000000 [get_bd_addr_spaces s_axi] [get_bd_addr_segs hbm_0/SAXI_16/HBM_MEM31] SEG_hbm_0_HBM_MEM3195
   create_bd_addr_seg -range 0x00400000 -offset 0x00000000 [get_bd_addr_spaces s_apb] [get_bd_addr_segs hbm_0/SAPB_0/Reg] SEG_hbm_0_Reg
+  create_bd_addr_seg -range 0x00400000 -offset 0x00000000 [get_bd_addr_spaces s_apb_1] [get_bd_addr_segs hbm_0/SAPB_1/Reg] SEG_hbm_0_Reg
 
   # Restore current instance
   current_bd_instance $oldCurInst
@@ -780,296 +840,3 @@ cr_bd_design_1 ""
 set_property REGISTERED_WITH_MANAGER "1" [get_files design_1.bd ]
 set_property SYNTH_CHECKPOINT_MODE "Hierarchical" [get_files design_1.bd ]
 
-# Create 'synth_1' run (if not found)
-if {[string equal [get_runs -quiet synth_1] ""]} {
-    create_run -name synth_1 -part xcvu37p-fsvh2892-2L-e-es1 -flow {Vivado Synthesis 2019} -strategy "Vivado Synthesis Defaults" -report_strategy {No Reports} -constrset constrs_1
-} else {
-  set_property strategy "Vivado Synthesis Defaults" [get_runs synth_1]
-  set_property flow "Vivado Synthesis 2019" [get_runs synth_1]
-}
-set obj [get_runs synth_1]
-set_property set_report_strategy_name 1 $obj
-set_property report_strategy {Vivado Synthesis Default Reports} $obj
-set_property set_report_strategy_name 0 $obj
-# Create 'synth_1_synth_report_utilization_0' report (if not found)
-if { [ string equal [get_report_configs -of_objects [get_runs synth_1] synth_1_synth_report_utilization_0] "" ] } {
-  create_report_config -report_name synth_1_synth_report_utilization_0 -report_type report_utilization:1.0 -steps synth_design -runs synth_1
-}
-set obj [get_report_configs -of_objects [get_runs synth_1] synth_1_synth_report_utilization_0]
-if { $obj != "" } {
-
-}
-set obj [get_runs synth_1]
-set_property -name "part" -value "xcvu37p-fsvh2892-2L-e-es1" -objects $obj
-set_property -name "strategy" -value "Vivado Synthesis Defaults" -objects $obj
-
-# set the current synth run
-current_run -synthesis [get_runs synth_1]
-
-# Create 'impl_1' run (if not found)
-if {[string equal [get_runs -quiet impl_1] ""]} {
-    create_run -name impl_1 -part xcvu37p-fsvh2892-2L-e-es1 -flow {Vivado Implementation 2019} -strategy "Vivado Implementation Defaults" -report_strategy {No Reports} -constrset constrs_1 -parent_run synth_1
-} else {
-  set_property strategy "Vivado Implementation Defaults" [get_runs impl_1]
-  set_property flow "Vivado Implementation 2019" [get_runs impl_1]
-}
-set obj [get_runs impl_1]
-set_property set_report_strategy_name 1 $obj
-set_property report_strategy {Vivado Implementation Default Reports} $obj
-set_property set_report_strategy_name 0 $obj
-# Create 'impl_1_init_report_timing_summary_0' report (if not found)
-if { [ string equal [get_report_configs -of_objects [get_runs impl_1] impl_1_init_report_timing_summary_0] "" ] } {
-  create_report_config -report_name impl_1_init_report_timing_summary_0 -report_type report_timing_summary:1.0 -steps init_design -runs impl_1
-}
-set obj [get_report_configs -of_objects [get_runs impl_1] impl_1_init_report_timing_summary_0]
-if { $obj != "" } {
-set_property -name "is_enabled" -value "0" -objects $obj
-set_property -name "options.max_paths" -value "10" -objects $obj
-
-}
-# Create 'impl_1_opt_report_drc_0' report (if not found)
-if { [ string equal [get_report_configs -of_objects [get_runs impl_1] impl_1_opt_report_drc_0] "" ] } {
-  create_report_config -report_name impl_1_opt_report_drc_0 -report_type report_drc:1.0 -steps opt_design -runs impl_1
-}
-set obj [get_report_configs -of_objects [get_runs impl_1] impl_1_opt_report_drc_0]
-if { $obj != "" } {
-
-}
-# Create 'impl_1_opt_report_timing_summary_0' report (if not found)
-if { [ string equal [get_report_configs -of_objects [get_runs impl_1] impl_1_opt_report_timing_summary_0] "" ] } {
-  create_report_config -report_name impl_1_opt_report_timing_summary_0 -report_type report_timing_summary:1.0 -steps opt_design -runs impl_1
-}
-set obj [get_report_configs -of_objects [get_runs impl_1] impl_1_opt_report_timing_summary_0]
-if { $obj != "" } {
-set_property -name "is_enabled" -value "0" -objects $obj
-set_property -name "options.max_paths" -value "10" -objects $obj
-
-}
-# Create 'impl_1_power_opt_report_timing_summary_0' report (if not found)
-if { [ string equal [get_report_configs -of_objects [get_runs impl_1] impl_1_power_opt_report_timing_summary_0] "" ] } {
-  create_report_config -report_name impl_1_power_opt_report_timing_summary_0 -report_type report_timing_summary:1.0 -steps power_opt_design -runs impl_1
-}
-set obj [get_report_configs -of_objects [get_runs impl_1] impl_1_power_opt_report_timing_summary_0]
-if { $obj != "" } {
-set_property -name "is_enabled" -value "0" -objects $obj
-set_property -name "options.max_paths" -value "10" -objects $obj
-
-}
-# Create 'impl_1_place_report_io_0' report (if not found)
-if { [ string equal [get_report_configs -of_objects [get_runs impl_1] impl_1_place_report_io_0] "" ] } {
-  create_report_config -report_name impl_1_place_report_io_0 -report_type report_io:1.0 -steps place_design -runs impl_1
-}
-set obj [get_report_configs -of_objects [get_runs impl_1] impl_1_place_report_io_0]
-if { $obj != "" } {
-
-}
-# Create 'impl_1_place_report_utilization_0' report (if not found)
-if { [ string equal [get_report_configs -of_objects [get_runs impl_1] impl_1_place_report_utilization_0] "" ] } {
-  create_report_config -report_name impl_1_place_report_utilization_0 -report_type report_utilization:1.0 -steps place_design -runs impl_1
-}
-set obj [get_report_configs -of_objects [get_runs impl_1] impl_1_place_report_utilization_0]
-if { $obj != "" } {
-
-}
-# Create 'impl_1_place_report_control_sets_0' report (if not found)
-if { [ string equal [get_report_configs -of_objects [get_runs impl_1] impl_1_place_report_control_sets_0] "" ] } {
-  create_report_config -report_name impl_1_place_report_control_sets_0 -report_type report_control_sets:1.0 -steps place_design -runs impl_1
-}
-set obj [get_report_configs -of_objects [get_runs impl_1] impl_1_place_report_control_sets_0]
-if { $obj != "" } {
-set_property -name "options.verbose" -value "1" -objects $obj
-
-}
-# Create 'impl_1_place_report_incremental_reuse_0' report (if not found)
-if { [ string equal [get_report_configs -of_objects [get_runs impl_1] impl_1_place_report_incremental_reuse_0] "" ] } {
-  create_report_config -report_name impl_1_place_report_incremental_reuse_0 -report_type report_incremental_reuse:1.0 -steps place_design -runs impl_1
-}
-set obj [get_report_configs -of_objects [get_runs impl_1] impl_1_place_report_incremental_reuse_0]
-if { $obj != "" } {
-set_property -name "is_enabled" -value "0" -objects $obj
-
-}
-# Create 'impl_1_place_report_incremental_reuse_1' report (if not found)
-if { [ string equal [get_report_configs -of_objects [get_runs impl_1] impl_1_place_report_incremental_reuse_1] "" ] } {
-  create_report_config -report_name impl_1_place_report_incremental_reuse_1 -report_type report_incremental_reuse:1.0 -steps place_design -runs impl_1
-}
-set obj [get_report_configs -of_objects [get_runs impl_1] impl_1_place_report_incremental_reuse_1]
-if { $obj != "" } {
-set_property -name "is_enabled" -value "0" -objects $obj
-
-}
-# Create 'impl_1_place_report_timing_summary_0' report (if not found)
-if { [ string equal [get_report_configs -of_objects [get_runs impl_1] impl_1_place_report_timing_summary_0] "" ] } {
-  create_report_config -report_name impl_1_place_report_timing_summary_0 -report_type report_timing_summary:1.0 -steps place_design -runs impl_1
-}
-set obj [get_report_configs -of_objects [get_runs impl_1] impl_1_place_report_timing_summary_0]
-if { $obj != "" } {
-set_property -name "is_enabled" -value "0" -objects $obj
-set_property -name "options.max_paths" -value "10" -objects $obj
-
-}
-# Create 'impl_1_post_place_power_opt_report_timing_summary_0' report (if not found)
-if { [ string equal [get_report_configs -of_objects [get_runs impl_1] impl_1_post_place_power_opt_report_timing_summary_0] "" ] } {
-  create_report_config -report_name impl_1_post_place_power_opt_report_timing_summary_0 -report_type report_timing_summary:1.0 -steps post_place_power_opt_design -runs impl_1
-}
-set obj [get_report_configs -of_objects [get_runs impl_1] impl_1_post_place_power_opt_report_timing_summary_0]
-if { $obj != "" } {
-set_property -name "is_enabled" -value "0" -objects $obj
-set_property -name "options.max_paths" -value "10" -objects $obj
-
-}
-# Create 'impl_1_phys_opt_report_timing_summary_0' report (if not found)
-if { [ string equal [get_report_configs -of_objects [get_runs impl_1] impl_1_phys_opt_report_timing_summary_0] "" ] } {
-  create_report_config -report_name impl_1_phys_opt_report_timing_summary_0 -report_type report_timing_summary:1.0 -steps phys_opt_design -runs impl_1
-}
-set obj [get_report_configs -of_objects [get_runs impl_1] impl_1_phys_opt_report_timing_summary_0]
-if { $obj != "" } {
-set_property -name "is_enabled" -value "0" -objects $obj
-set_property -name "options.max_paths" -value "10" -objects $obj
-
-}
-# Create 'impl_1_route_report_drc_0' report (if not found)
-if { [ string equal [get_report_configs -of_objects [get_runs impl_1] impl_1_route_report_drc_0] "" ] } {
-  create_report_config -report_name impl_1_route_report_drc_0 -report_type report_drc:1.0 -steps route_design -runs impl_1
-}
-set obj [get_report_configs -of_objects [get_runs impl_1] impl_1_route_report_drc_0]
-if { $obj != "" } {
-
-}
-# Create 'impl_1_route_report_methodology_0' report (if not found)
-if { [ string equal [get_report_configs -of_objects [get_runs impl_1] impl_1_route_report_methodology_0] "" ] } {
-  create_report_config -report_name impl_1_route_report_methodology_0 -report_type report_methodology:1.0 -steps route_design -runs impl_1
-}
-set obj [get_report_configs -of_objects [get_runs impl_1] impl_1_route_report_methodology_0]
-if { $obj != "" } {
-
-}
-# Create 'impl_1_route_report_power_0' report (if not found)
-if { [ string equal [get_report_configs -of_objects [get_runs impl_1] impl_1_route_report_power_0] "" ] } {
-  create_report_config -report_name impl_1_route_report_power_0 -report_type report_power:1.0 -steps route_design -runs impl_1
-}
-set obj [get_report_configs -of_objects [get_runs impl_1] impl_1_route_report_power_0]
-if { $obj != "" } {
-
-}
-# Create 'impl_1_route_report_route_status_0' report (if not found)
-if { [ string equal [get_report_configs -of_objects [get_runs impl_1] impl_1_route_report_route_status_0] "" ] } {
-  create_report_config -report_name impl_1_route_report_route_status_0 -report_type report_route_status:1.0 -steps route_design -runs impl_1
-}
-set obj [get_report_configs -of_objects [get_runs impl_1] impl_1_route_report_route_status_0]
-if { $obj != "" } {
-
-}
-# Create 'impl_1_route_report_timing_summary_0' report (if not found)
-if { [ string equal [get_report_configs -of_objects [get_runs impl_1] impl_1_route_report_timing_summary_0] "" ] } {
-  create_report_config -report_name impl_1_route_report_timing_summary_0 -report_type report_timing_summary:1.0 -steps route_design -runs impl_1
-}
-set obj [get_report_configs -of_objects [get_runs impl_1] impl_1_route_report_timing_summary_0]
-if { $obj != "" } {
-set_property -name "options.max_paths" -value "10" -objects $obj
-
-}
-# Create 'impl_1_route_report_incremental_reuse_0' report (if not found)
-if { [ string equal [get_report_configs -of_objects [get_runs impl_1] impl_1_route_report_incremental_reuse_0] "" ] } {
-  create_report_config -report_name impl_1_route_report_incremental_reuse_0 -report_type report_incremental_reuse:1.0 -steps route_design -runs impl_1
-}
-set obj [get_report_configs -of_objects [get_runs impl_1] impl_1_route_report_incremental_reuse_0]
-if { $obj != "" } {
-
-}
-# Create 'impl_1_route_report_clock_utilization_0' report (if not found)
-if { [ string equal [get_report_configs -of_objects [get_runs impl_1] impl_1_route_report_clock_utilization_0] "" ] } {
-  create_report_config -report_name impl_1_route_report_clock_utilization_0 -report_type report_clock_utilization:1.0 -steps route_design -runs impl_1
-}
-set obj [get_report_configs -of_objects [get_runs impl_1] impl_1_route_report_clock_utilization_0]
-if { $obj != "" } {
-
-}
-# Create 'impl_1_route_report_bus_skew_0' report (if not found)
-if { [ string equal [get_report_configs -of_objects [get_runs impl_1] impl_1_route_report_bus_skew_0] "" ] } {
-  create_report_config -report_name impl_1_route_report_bus_skew_0 -report_type report_bus_skew:1.1 -steps route_design -runs impl_1
-}
-set obj [get_report_configs -of_objects [get_runs impl_1] impl_1_route_report_bus_skew_0]
-if { $obj != "" } {
-set_property -name "options.warn_on_violation" -value "1" -objects $obj
-
-}
-# Create 'impl_1_post_route_phys_opt_report_timing_summary_0' report (if not found)
-if { [ string equal [get_report_configs -of_objects [get_runs impl_1] impl_1_post_route_phys_opt_report_timing_summary_0] "" ] } {
-  create_report_config -report_name impl_1_post_route_phys_opt_report_timing_summary_0 -report_type report_timing_summary:1.0 -steps post_route_phys_opt_design -runs impl_1
-}
-set obj [get_report_configs -of_objects [get_runs impl_1] impl_1_post_route_phys_opt_report_timing_summary_0]
-if { $obj != "" } {
-set_property -name "options.max_paths" -value "10" -objects $obj
-set_property -name "options.warn_on_violation" -value "1" -objects $obj
-
-}
-# Create 'impl_1_post_route_phys_opt_report_bus_skew_0' report (if not found)
-if { [ string equal [get_report_configs -of_objects [get_runs impl_1] impl_1_post_route_phys_opt_report_bus_skew_0] "" ] } {
-  create_report_config -report_name impl_1_post_route_phys_opt_report_bus_skew_0 -report_type report_bus_skew:1.1 -steps post_route_phys_opt_design -runs impl_1
-}
-set obj [get_report_configs -of_objects [get_runs impl_1] impl_1_post_route_phys_opt_report_bus_skew_0]
-if { $obj != "" } {
-set_property -name "options.warn_on_violation" -value "1" -objects $obj
-
-}
-set obj [get_runs impl_1]
-set_property -name "part" -value "xcvu37p-fsvh2892-2L-e-es1" -objects $obj
-set_property -name "strategy" -value "Vivado Implementation Defaults" -objects $obj
-set_property -name "steps.write_bitstream.args.readback_file" -value "0" -objects $obj
-set_property -name "steps.write_bitstream.args.verbose" -value "0" -objects $obj
-
-# set the current impl run
-current_run -implementation [get_runs impl_1]
-
-puts "INFO: Project created:${_xil_proj_name_}"
-# Create 'drc_1' gadget (if not found)
-if {[string equal [get_dashboard_gadgets  [ list "drc_1" ] ] ""]} {
-create_dashboard_gadget -name {drc_1} -type drc
-}
-set obj [get_dashboard_gadgets [ list "drc_1" ] ]
-set_property -name "reports" -value "impl_1#impl_1_route_report_drc_0" -objects $obj
-
-# Create 'methodology_1' gadget (if not found)
-if {[string equal [get_dashboard_gadgets  [ list "methodology_1" ] ] ""]} {
-create_dashboard_gadget -name {methodology_1} -type methodology
-}
-set obj [get_dashboard_gadgets [ list "methodology_1" ] ]
-set_property -name "reports" -value "impl_1#impl_1_route_report_methodology_0" -objects $obj
-
-# Create 'power_1' gadget (if not found)
-if {[string equal [get_dashboard_gadgets  [ list "power_1" ] ] ""]} {
-create_dashboard_gadget -name {power_1} -type power
-}
-set obj [get_dashboard_gadgets [ list "power_1" ] ]
-set_property -name "reports" -value "impl_1#impl_1_route_report_power_0" -objects $obj
-
-# Create 'timing_1' gadget (if not found)
-if {[string equal [get_dashboard_gadgets  [ list "timing_1" ] ] ""]} {
-create_dashboard_gadget -name {timing_1} -type timing
-}
-set obj [get_dashboard_gadgets [ list "timing_1" ] ]
-set_property -name "reports" -value "impl_1#impl_1_route_report_timing_summary_0" -objects $obj
-
-# Create 'utilization_1' gadget (if not found)
-if {[string equal [get_dashboard_gadgets  [ list "utilization_1" ] ] ""]} {
-create_dashboard_gadget -name {utilization_1} -type utilization
-}
-set obj [get_dashboard_gadgets [ list "utilization_1" ] ]
-set_property -name "reports" -value "synth_1#synth_1_synth_report_utilization_0" -objects $obj
-set_property -name "run.step" -value "synth_design" -objects $obj
-set_property -name "run.type" -value "synthesis" -objects $obj
-
-# Create 'utilization_2' gadget (if not found)
-if {[string equal [get_dashboard_gadgets  [ list "utilization_2" ] ] ""]} {
-create_dashboard_gadget -name {utilization_2} -type utilization
-}
-set obj [get_dashboard_gadgets [ list "utilization_2" ] ]
-set_property -name "reports" -value "impl_1#impl_1_place_report_utilization_0" -objects $obj
-
-move_dashboard_gadget -name {utilization_1} -row 0 -col 0
-move_dashboard_gadget -name {power_1} -row 1 -col 0
-move_dashboard_gadget -name {drc_1} -row 2 -col 0
-move_dashboard_gadget -name {timing_1} -row 0 -col 1
-move_dashboard_gadget -name {utilization_2} -row 1 -col 1
-move_dashboard_gadget -name {methodology_1} -row 2 -col 1
